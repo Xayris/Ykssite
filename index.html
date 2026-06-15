@@ -2,10 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>YKS Takip Sistemi</title>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+<title>YKS Günlük Plan Sistemi</title>
 <style>
 body {
     font-family: Arial;
@@ -33,128 +30,81 @@ header {
     border-radius: 10px;
 }
 
-input {
-    padding: 8px;
-    margin: 5px;
-}
+h2 { color: #38bdf8; }
 
-button {
-    padding: 10px;
-    background: #38bdf8;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-table {
-    width: 100%;
-    margin-top: 10px;
-    border-collapse: collapse;
-}
-
-td, th {
-    border: 1px solid #334155;
-    padding: 8px;
-    text-align: center;
-}
+ul { line-height: 1.8; }
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>📊 YKS Takip Sistemi</h1>
-<p>Netlerini gir → ilerlemeni gör</p>
+<h1>📚 YKS Günlük + Haftalık Plan</h1>
+<p>TYT 50 → 90 | AYT 15 → 50</p>
 </header>
 
 <div class="container">
 
+<!-- GÜNLÜK PLAN -->
 <div class="card">
-<h2>➕ Yeni Veri Ekle</h2>
-
-<input id="date" type="date">
-<input id="tyt" type="number" placeholder="TYT Net">
-<input id="ayt" type="number" placeholder="AYT Net">
-
-<button onclick="addData()">Ekle</button>
+<h2>📅 Günlük Program (8-9 saat)</h2>
+<ul>
+<li>09:00 – 11:00 → TYT Matematik (Problem + Temel)</li>
+<li>11:15 – 12:45 → Türkçe (Paragraf her gün)</li>
+<li>13:45 – 15:45 → AYT Matematik</li>
+<li>16:00 – 17:30 → Fen (Fizik/Kimya/Biyoloji dönüşümlü)</li>
+<li>20:00 – 21:30 → Deneme + yanlış analizi</li>
+</ul>
 </div>
 
+<!-- İŞ VARSA -->
 <div class="card">
-<h2>📈 Grafik</h2>
-<canvas id="chart"></canvas>
+<h2>📅 Yoğun Gün (5-6 saat)</h2>
+<ul>
+<li>2 saat → TYT Matematik</li>
+<li>1 saat → Paragraf</li>
+<li>2 saat → AYT</li>
+<li>1 saat → Fen</li>
+</ul>
 </div>
 
+<!-- TYT PLAN -->
 <div class="card">
-<h2>📋 Kayıtlar</h2>
-<table>
-<thead>
-<tr>
-<th>Tarih</th>
-<th>TYT</th>
-<th>AYT</th>
-</tr>
-</thead>
-<tbody id="table"></tbody>
-</table>
+<h2>📘 TYT Konu Sırası</h2>
+<ul>
+<li>Hafta 1: Temel kavramlar + sayılar</li>
+<li>Hafta 2: Rasyonel + üslü + köklü</li>
+<li>Hafta 3: Denklem + problemler</li>
+<li>Hafta 4: Geometri giriş</li>
+</ul>
+</div>
+
+<!-- AYT PLAN -->
+<div class="card">
+<h2>📘 AYT Konu Sırası</h2>
+<ul>
+<li>Fonksiyonlar</li>
+<li>Polinomlar</li>
+<li>Trigonometri</li>
+<li>Limit + türev + integral</li>
+<li>Fizik: dinamik + elektrik</li>
+<li>Kimya: mol + denge</li>
+<li>Biyoloji: kalıtım</li>
+</ul>
+</div>
+
+<!-- KURALLAR -->
+<div class="card">
+<h2>⚠️ Altın Kurallar</h2>
+<ul>
+<li>Her gün paragraf + problem</li>
+<li>Deneme çözmeden net artmaz</li>
+<li>Yanlış defteri zorunlu</li>
+<li>Yeni konu değil, tekrar kazanır</li>
+</ul>
 </div>
 
 </div>
-
-<script>
-let data = JSON.parse(localStorage.getItem("yksData")) || [];
-
-function addData() {
-    let date = document.getElementById("date").value;
-    let tyt = Number(document.getElementById("tyt").value);
-    let ayt = Number(document.getElementById("ayt").value);
-
-    if(!date) return;
-
-    data.push({date, tyt, ayt});
-    localStorage.setItem("yksData", JSON.stringify(data));
-
-    render();
-}
-
-function render() {
-    // tablo
-    let table = document.getElementById("table");
-    table.innerHTML = "";
-
-    data.forEach(d => {
-        table.innerHTML += `
-        <tr>
-            <td>${d.date}</td>
-            <td>${d.tyt}</td>
-            <td>${d.ayt}</td>
-        </tr>`;
-    });
-
-    // grafik
-    let ctx = document.getElementById("chart").getContext("2d");
-
-    new Chart(ctx, {
-        type: "line",
-        data: {
-            labels: data.map(d => d.date),
-            datasets: [
-                {
-                    label: "TYT Net",
-                    data: data.map(d => d.tyt),
-                    borderColor: "#38bdf8"
-                },
-                {
-                    label: "AYT Net",
-                    data: data.map(d => d.ayt),
-                    borderColor: "#f97316"
-                }
-            ]
-        }
-    });
-}
-
-render();
-</script>
 
 </body>
 </html>
