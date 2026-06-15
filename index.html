@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>YKS Takip Sistemi</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+    margin: 0;
+}
+
+header {
+    background: #1e293b;
+    padding: 20px;
+    text-align: center;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+.card {
+    background: #1e293b;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+}
+
+input {
+    padding: 8px;
+    margin: 5px;
+}
+
+button {
+    padding: 10px;
+    background: #38bdf8;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+table {
+    width: 100%;
+    margin-top: 10px;
+    border-collapse: collapse;
+}
+
+td, th {
+    border: 1px solid #334155;
+    padding: 8px;
+    text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>📊 YKS Takip Sistemi</h1>
+<p>Netlerini gir → ilerlemeni gör</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+<h2>➕ Yeni Veri Ekle</h2>
+
+<input id="date" type="date">
+<input id="tyt" type="number" placeholder="TYT Net">
+<input id="ayt" type="number" placeholder="AYT Net">
+
+<button onclick="addData()">Ekle</button>
+</div>
+
+<div class="card">
+<h2>📈 Grafik</h2>
+<canvas id="chart"></canvas>
+</div>
+
+<div class="card">
+<h2>📋 Kayıtlar</h2>
+<table>
+<thead>
+<tr>
+<th>Tarih</th>
+<th>TYT</th>
+<th>AYT</th>
+</tr>
+</thead>
+<tbody id="table"></tbody>
+</table>
+</div>
+
+</div>
+
+<script>
+let data = JSON.parse(localStorage.getItem("yksData")) || [];
+
+function addData() {
+    let date = document.getElementById("date").value;
+    let tyt = Number(document.getElementById("tyt").value);
+    let ayt = Number(document.getElementById("ayt").value);
+
+    if(!date) return;
+
+    data.push({date, tyt, ayt});
+    localStorage.setItem("yksData", JSON.stringify(data));
+
+    render();
+}
+
+function render() {
+    // tablo
+    let table = document.getElementById("table");
+    table.innerHTML = "";
+
+    data.forEach(d => {
+        table.innerHTML += `
+        <tr>
+            <td>${d.date}</td>
+            <td>${d.tyt}</td>
+            <td>${d.ayt}</td>
+        </tr>`;
+    });
+
+    // grafik
+    let ctx = document.getElementById("chart").getContext("2d");
+
+    new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: data.map(d => d.date),
+            datasets: [
+                {
+                    label: "TYT Net",
+                    data: data.map(d => d.tyt),
+                    borderColor: "#38bdf8"
+                },
+                {
+                    label: "AYT Net",
+                    data: data.map(d => d.ayt),
+                    borderColor: "#f97316"
+                }
+            ]
+        }
+    });
+}
+
+render();
+</script>
+
+</body>
+</html>
